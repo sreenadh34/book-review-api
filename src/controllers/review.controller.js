@@ -11,7 +11,7 @@ export const createReview = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, data: review });
 });
 
-// Controller to update an existing review by the user. 
+// Controller to update an existing review by the user.
 export const updateReview = asyncHandler(async (req, res) => {
   const review = await reviewService.updateUserReview(
     req.params.id,

@@ -2,7 +2,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import * as authService from '../services/auth.service.js';
 
 // controller for user signup
-// create user 
+// create user
 
 export const signup = asyncHandler(async (req, res) => {
   const user = await authService.createUser(req.body);

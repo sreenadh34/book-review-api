@@ -3,7 +3,11 @@ import { User } from '../models/User.js';
 
 export const createUser = async (userData) => {
   // Check for existing user by email or username
-  if (await User.findOne({ $or: [{ email: userData.email }, { username: userData.username }] })) {
+  if (
+    await User.findOne({
+      $or: [{ email: userData.email }, { username: userData.username }],
+    })
+  ) {
     throw new Error('User already exists');
   }
   // Create and return the new user
@@ -19,7 +23,7 @@ export const loginUser = async (email, password) => {
   }
   // Generate JWT token with userId payload and expiration
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '1h'
+    expiresIn: process.env.JWT_EXPIRES_IN || '1h',
   });
-    return token;
+  return token;
 };

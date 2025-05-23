@@ -4,7 +4,7 @@ export const createReview = async (userId, bookId, reviewData) => {
   // Check if the user has already reviewed this book
   const existingReview = await Review.findOne({ user: userId, book: bookId });
   if (existingReview) throw new Error('Already reviewed this book');
-  
+
   // Create and return the new review
   return Review.create({ ...reviewData, user: userId, book: bookId });
 };

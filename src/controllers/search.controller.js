@@ -10,8 +10,8 @@ export const searchBooks = async (req, res) => {
   try {
     const { q } = req.query;
     if (!q) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ 
-        message: 'Search query is required' 
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: 'Search query is required',
       });
     }
 
@@ -20,18 +20,18 @@ export const searchBooks = async (req, res) => {
       $or: [
         { title: { $regex: q, $options: 'i' } },
         { author: { $regex: q, $options: 'i' } },
-      ]
+      ],
     }).limit(10);
     if (books.length === 0) {
-      return res.status(StatusCodes.NOT_FOUND).json({ 
-        message: 'No books found matching your query' 
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: 'No books found matching your query',
       });
     } else {
-
-    res.json(books);}
+      res.json(books);
+    }
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
-      message: 'Search failed' 
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: 'Search failed',
     });
   }
 };

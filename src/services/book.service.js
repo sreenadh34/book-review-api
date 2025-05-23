@@ -1,7 +1,8 @@
-import {Book} from '../models/Book.js';
+import { Book } from '../models/Book.js';
 import { Review } from '../models/Review.js';
 
-export const createBook = async (body , user) =>  Book.create({...body, created_by: user._id});
+export const createBook = async (body, user) =>
+  Book.create({ ...body, created_by: user._id });
 
 export const getBooks = async (filters = {}, page = 1, limit = 10) => {
   const query = {};
@@ -15,7 +16,7 @@ export const getBooks = async (filters = {}, page = 1, limit = 10) => {
     Book.find(query)
       .skip((page - 1) * limit)
       .limit(limit),
-    Book.countDocuments(query)
+    Book.countDocuments(query),
   ]);
 
   // Return paginated result with metadata
@@ -27,25 +28,26 @@ export const getBooks = async (filters = {}, page = 1, limit = 10) => {
  * Also calculates average rating and total reviews for the book.
  */
 export const getBookDetails = async (bookId) => {
-    // Find the book by ID
-    const book = await Book.findById(bookId);
-    if (!book) throw new Error('Book not found');
-  
-    // Aggregate reviews to calculate average rating and total reviews
-    const reviews = await Review.aggregate([
-      { $match: { book: book._id } },
-      { $group: {
+  // Find the book by ID
+  const book = await Book.findById(bookId);
+  if (!book) throw new Error('Book not found');
+
+  // Aggregate reviews to calculate average rating and total reviews
+  const reviews = await Review.aggregate([
+    { $match: { book: book._id } },
+    {
+      $group: {
         _id: null,
         averageRating: { $avg: '$rating' },
-        totalReviews: { $sum: 1 }
-      }}
-    ]);
-  
-    // Return book details along with rating info
-    return {
-      ...book.toObject(),
-      averageRating: reviews[0]?.averageRating || 0,
-      totalReviews: reviews[0]?.totalReviews || 0
-    };
+        totalReviews: { $sum: 1 },
+      },
+    },
+  ]);
+
+  // Return book details along with rating info
+  return {
+    ...book.toObject(),
+    averageRating: reviews[0]?.averageRating || 0,
+    totalReviews: reviews[0]?.totalReviews || 0,
   };
-  
+};
