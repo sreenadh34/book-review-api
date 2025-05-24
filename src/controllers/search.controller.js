@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { Book } from '../models/Book.js';
+import { searchBooksService } from '../services/search.service';
 
 /**
  * Controller to search for books by title or author.
@@ -16,17 +16,14 @@ export const searchBooks = async (req, res) => {
     }
 
     // Search for books where title or author matches the query (case-insensitive)
-    const books = await Book.find({
-      $or: [
-        { title: { $regex: q, $options: 'i' } },
-        { author: { $regex: q, $options: 'i' } },
-      ],
-    }).limit(10);
+    const books = await searchBooksService(q);
+
     if (books.length === 0) {
       return res.status(StatusCodes.NOT_FOUND).json({
         message: 'No books found matching your query',
       });
-    } else {
+    }
+    {
       res.json(books);
     }
   } catch (error) {
